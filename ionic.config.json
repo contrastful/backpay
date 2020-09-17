@@ -1,0 +1,7 @@
+{
+  "name": "Backpay",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
