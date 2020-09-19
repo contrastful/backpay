@@ -5,7 +5,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 setupConfig({
-    mode: 'ios'
+    mode: 'md'
 });
 
 ReactDOM.render(<App />, document.getElementById('root'));

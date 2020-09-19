@@ -1,26 +1,68 @@
 .header {
-    padding-top: 2rem;
+    .toolbar {
+        padding-top: 2rem;
 
-    .title {
-        display: block;
+        .title {
+            display: block;
+            color: white;
+            font-size: 26px;
+            padding-bottom: 0;
+        }
     }
+}
 
-    .scroller {
-        display: block;
-        margin-top: 3rem;
-        overflow-x: scroll;
-        white-space: nowrap;
+.scroller {
+    margin-left: -5px;
+    margin-right: -5px;
+    margin-bottom: -3px;
+    margin-top: 1.5rem;
+    background: white;
+    display: block;
+    overflow-x: scroll;
+    white-space: nowrap;
+    padding: .5rem 1rem;
 
-        .chip {
-            display: inline-block;
+    .chip, .card {
+        display: inline-block;
 
-            &.active {
-                background: green;
-            }
+        &.active {
+            background: green;
         }
     }
 }
 
 .mapSection {
-    height: calc(100% - 125px);
+    height: 100%;
+}
+
+.bottomScroll {
+    overflow-x: scroll;
+    white-space: nowrap;
+    position: absolute;
+    padding-bottom: 10px;
+    width: 100%;
+    z-index: 3;
+    background: linear-gradient(0deg, rgba(140,140,140,0.7833508403361344) 28%, rgba(0,0,0,0) 100%);
+    transition: all .3s;
+
+    .card {
+        display: inline-block;
+        box-shadow: none;
+        border-radius: 13px;
+        min-width: 130px;
+        // background: rgb(44, 205, 92);
+        
+        &.ion-color-primary {
+            color: white;
+        }
+
+        .header {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .content {
+            margin-top: -5px;
+        }
+    }
 }

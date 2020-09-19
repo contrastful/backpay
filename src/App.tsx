@@ -10,7 +10,7 @@ import {
   IonTabs
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { map, personCircle } from 'ionicons/icons';
+import { heartCircleOutline, map, mapOutline, peopleCircleOutline, personCircle } from 'ionicons/icons';
 import Map from './pages/Map.jsx';
 import Tab2 from './pages/Tab2';
 
@@ -44,12 +44,12 @@ const App: React.FC = () => (
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
           <IonTabButton tab="map" href="/map">
-            <IonIcon icon={map} />
-            <IonLabel>Mapa</IonLabel>
+            <IonIcon icon={mapOutline} />
+            <IonLabel>Podniky</IonLabel>
           </IonTabButton>
           <IonTabButton tab="tab2" href="/tab2">
-            <IonIcon icon={personCircle} />
-            <IonLabel>Nastavenia</IonLabel>
+            <IonIcon icon={heartCircleOutline} />
+            <IonLabel>Organizácie</IonLabel>
           </IonTabButton>
         </IonTabBar>
       </IonTabs>
