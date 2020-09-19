@@ -1,0 +1,26 @@
+.header {
+    padding-top: 2rem;
+
+    .title {
+        display: block;
+    }
+
+    .scroller {
+        display: block;
+        margin-top: 3rem;
+        overflow-x: scroll;
+        white-space: nowrap;
+
+        .chip {
+            display: inline-block;
+
+            &.active {
+                background: green;
+            }
+        }
+    }
+}
+
+.mapSection {
+    height: calc(100% - 125px);
+}
