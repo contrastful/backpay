@@ -53,8 +53,11 @@
         display: none;
     }
 
-    .card {
+    .cardContainer {
         display: inline-block;
+    }
+
+    .card {
         box-shadow: none;
         border-radius: 13px;
         min-width: 130px;

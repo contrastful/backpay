@@ -17,7 +17,17 @@ export default (props) => {
 
             <IonLabel class="label">{ place.name }</IonLabel>
 
-            { props.isActive ? <IonButton class="showMoreButton" color="primary" fill="outline" size="small">Zobraziť</IonButton> : null }
+            { props.isActive ?
+                <IonButton
+                    class="showMoreButton"
+                    color="primary"
+                    fill="outline"
+                    size="small"
+                    onClick={ props.onShowDetailClick }
+                >
+                    Zobraziť
+                </IonButton>
+            : null }
         </div>
         // <IonCard style={{ height: '100px', width: '200px' }}>
         //     <IonCardHeader>

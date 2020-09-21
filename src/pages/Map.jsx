@@ -7,6 +7,7 @@ import GoogleMapReact from 'google-map-react';
 import MapMarker from '../components/MapMarker';
 
 import MapStyles from '../theme/MapStyle.json';
+import PlaceModal from '../components/PlaceModal';
 
 const usedIcons = {cafe, shirt, fastFood};
 
@@ -20,6 +21,7 @@ const Map = () => {
   const [activeCategory, setActiveCategory] = useState();
   const [activePlace, setActivePlace] = useState();
   const [currentZoom, setCurrentZoom] = useState();
+  const [placeDetailOpen, setPlaceDetailOpen] = useState();
 
   const bottomPlacesRef = useRef();
 
@@ -122,6 +124,9 @@ const Map = () => {
     } else {
       setActiveCategory(category.id);
       setBottomCardsActive(true);
+      setActivePlace(null);
+      setCurrentZoom(14);
+      mapRef.current.setZoom(14);
     }
   }
 
@@ -195,6 +200,7 @@ const Map = () => {
                     place={place}
                     isActive={placeIsActive(place)}
                     onClick={() => switchPlace(place, true)}
+                    onShowDetailClick={() => setPlaceDetailOpen(place)}
                   />
                 ) : null
               }
@@ -211,12 +217,16 @@ const Map = () => {
         <div className="bottomScroll" ref={bottomPlacesRef} style={{ bottom: bottomCardsActive ? '55px' : '-10px', opacity: bottomCardsActive ? 1 : 0.95 }} onTouchStart={ () => !bottomCardsActive ? setBottomCardsActive(true) : null }>
           {
             places ? places.filter(place => !activeCategory || activeCategory === place.category).map(place =>
-              <IonCard id={`place_bottom_${place.id}`} key={place.id} class="card" color={placeIsActive(place) ? 'primary' : 'light'} onClick={() => switchPlace(place) }>
-                <IonCardHeader>
-                  <IonCardTitle>{ place.name } <IonIcon icon={cafe} color={placeIsActive(place) ? 'light' : 'primary'} size="medium" style={{ position: 'relative', top: '4px' }} /></IonCardTitle>
-                  <IonCardSubtitle>{ place.subtitle }</IonCardSubtitle>
-                </IonCardHeader>
-              </IonCard>
+              <div key={place.id} className="cardContainer" id={`place_bottom_${place.id}`}>
+                <IonCard className="card" key={place.id} color={placeIsActive(place) ? 'primary' : 'light'} onClick={() => switchPlace(place) }>
+                  <IonCardHeader>
+                    <IonCardTitle>{ place.name } <IonIcon icon={cafe} color={placeIsActive(place) ? 'light' : 'primary'} size="medium" style={{ position: 'relative', top: '4px' }} /></IonCardTitle>
+                    <IonCardSubtitle>{ place.subtitle }</IonCardSubtitle>
+                  </IonCardHeader>
+                </IonCard>
+
+                <PlaceModal place={place} isOpen={placeDetailOpen && placeDetailOpen.id === place.id} />
+              </div>
             ) : null
           }
         </div>
