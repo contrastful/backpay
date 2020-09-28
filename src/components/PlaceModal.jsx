@@ -11,7 +11,7 @@ export default (props) => {
 
     return (
         <IonModal isOpen={props.isOpen}>
-            <p>{ place.name }</p>
+            <p>{ place.title }</p>
         </IonModal>
     )
 }

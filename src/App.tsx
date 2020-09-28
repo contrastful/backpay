@@ -36,7 +36,7 @@ import './theme/fonts.css';
 
 const App: React.FC = () => (
   <IonApp>
-    <IonReactRouter>
+    {/* <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
           <Route path="/map" component={Map} exact={true} />
@@ -54,6 +54,12 @@ const App: React.FC = () => (
           </IonTabButton>
         </IonTabBar>
       </IonTabs>
+    </IonReactRouter> */}
+    
+    <IonReactRouter>
+      <IonRouterOutlet>
+        <Route path="/map" component={Map} exact={true} />
+      </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
 );

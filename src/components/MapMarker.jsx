@@ -15,7 +15,7 @@ export default (props) => {
                 <IonIcon icon={usedIcons[place.icon]} color="light" class="icon" />
             </div>
 
-            <IonLabel class="label">{ place.name }</IonLabel>
+            <IonLabel class="label">{ place.title }</IonLabel>
 
             { props.isActive ?
                 <IonButton
@@ -31,7 +31,7 @@ export default (props) => {
         </div>
         // <IonCard style={{ height: '100px', width: '200px' }}>
         //     <IonCardHeader>
-        //         <IonCardTitle>{ props.place.name }</IonCardTitle>
+        //         <IonCardTitle>{ props.place.title }</IonCardTitle>
         //     </IonCardHeader>
         // </IonCard>
     )

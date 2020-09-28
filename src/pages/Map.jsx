@@ -8,6 +8,8 @@ import MapMarker from '../components/MapMarker';
 
 import MapStyles from '../theme/MapStyle.json';
 import PlaceModal from '../components/PlaceModal';
+import Axios from 'axios';
+import constants from '../constants';
 
 const usedIcons = {cafe, shirt, fastFood};
 
@@ -31,67 +33,22 @@ const Map = () => {
     setLoading(true);
 
     try {
-      Geolocation.getCurrentPosition().then(position => {
-        setLoading(false);
+      Geolocation.getCurrentPosition().then(async position => {
         setPosition({ lat: position.coords.latitude, lng: position.coords.longitude });
 
-        setCategories([
-          {
-            id: 1,
-            name: 'Kaviarne',
-            icon: 'cafe'
-          },
-          {
-            id: 2,
-            name: 'Slow fashion',
-            icon: 'shirt'
-          },
-          {
-            id: 3,
-            name: 'Jedlo',
-            icon: 'fastFood'
-          }
-        ]);
+        let categoriesRes = await Axios.get(`${ constants.API_BASE }/categories`);
+        setCategories(categoriesRes.data.categories);
 
-        setPlaces([
-          {
-            id: 1,
-            name: 'Mad Drop',
-            subtitle: 'Metalová kaviareň s posedením',
-            category: 1,
-            coordinates: {
-              lat: 48.14667508062288,
-              lng: 17.108716964721683
-            },
-            icon: 'cafe'
-          },
-          {
-            id: 2,
-            name: 'ArtCafe',
-            subtitle: 'Galéria a kaviareň v jednom',
-            category: 1,
-            coordinates: {
-              lat: 48.14667508062288,
-              lng: 17.118716964721683
-            },
-            icon: 'cafe'
-          },
-          {
-            id: 3,
-            name: 'Jedlo',
-            subtitle: 'Dake jedlo',
-            category: 3,
-            coordinates: {
-              lat: 48.14667508062288,
-              lng: 17.128716964721683
-            },
-            icon: 'fastFood'
-          },
-        ]);
+        let placesRes = await Axios.get(`${ constants.API_BASE }/places`);
+        setPlaces(placesRes.data.places);
+
+        setLoading(false);
+
+        setBottomCardsActive(true);
       }).catch(e => {
         alert(JSON.stringify(e));
         setLoading(false);
-      })
+      });
     } catch (e) {
       alert(JSON.stringify(e));
       setLoading(false);
@@ -139,8 +96,8 @@ const Map = () => {
       setBottomCardsActive(true);
       setActivePlace(place);
       setCurrentZoom(17);
-      setPosition(place.coordinates);
-      mapRef.current.panTo(place.coordinates);
+      setPosition({ lat: place.latitude, lng: place.longitude });
+      mapRef.current.panTo({ lat: place.latitude, lng: place.longitude });
       mapRef.current.setZoom(17);
 
       var child = bottomPlacesRef.current.children.namedItem(`place_bottom_${place.id}`);
@@ -171,7 +128,7 @@ const Map = () => {
                 categories ? categories.map(category => 
                   <IonChip key={category.id} color="primary" outline={activeCategory !== category.id} onClick={() => switchCategory(category)}>
                     <IonIcon icon={usedIcons[category.icon]} color="primary" />
-                    <IonLabel>{category.name}</IonLabel>
+                    <IonLabel>{category.title}</IonLabel>
                     { activeCategory === category.id ? <IonIcon icon={checkmark} /> : null }
                   </IonChip>
                 ) : <IonProgressBar type="indeterminate" />
@@ -192,11 +149,11 @@ const Map = () => {
               onGoogleApiLoaded={({ map, maps }) => mapRef.current = map }
             >
               {
-                places ? places.filter(place => !activeCategory || activeCategory === place.category).filter(place => !activePlace || activePlace.id === place.id).map(place => 
+                places ? places.filter(place => !activeCategory || activeCategory === place.categoryId).filter(place => !activePlace || activePlace.id === place.id).map(place => 
                   <MapMarker
                     key={place.id}
-                    lat={place.coordinates.lat}
-                    lng={place.coordinates.lng}
+                    lat={place.latitude}
+                    lng={place.longitude}
                     place={place}
                     isActive={placeIsActive(place)}
                     onClick={() => switchPlace(place, true)}
@@ -214,13 +171,13 @@ const Map = () => {
           </IonFabButton>
         </IonFab>
 
-        <div className="bottomScroll" ref={bottomPlacesRef} style={{ bottom: bottomCardsActive ? '55px' : '-10px', opacity: bottomCardsActive ? 1 : 0.95 }} onTouchStart={ () => !bottomCardsActive ? setBottomCardsActive(true) : null }>
+        <div className="bottomScroll" ref={bottomPlacesRef} style={{ bottom: bottomCardsActive ? '-10px' : '-70px', opacity: bottomCardsActive ? 1 : 0.95 }} onTouchStart={ () => !bottomCardsActive ? setBottomCardsActive(true) : null }>
           {
-            places ? places.filter(place => !activeCategory || activeCategory === place.category).map(place =>
+            places ? places.filter(place => !activeCategory || activeCategory === place.categoryId).map(place =>
               <div key={place.id} className="cardContainer" id={`place_bottom_${place.id}`}>
                 <IonCard className="card" key={place.id} color={placeIsActive(place) ? 'primary' : 'light'} onClick={() => switchPlace(place) }>
                   <IonCardHeader>
-                    <IonCardTitle>{ place.name } <IonIcon icon={cafe} color={placeIsActive(place) ? 'light' : 'primary'} size="medium" style={{ position: 'relative', top: '4px' }} /></IonCardTitle>
+                    <IonCardTitle>{ place.title } <IonIcon icon={cafe} color={placeIsActive(place) ? 'light' : 'primary'} size="medium" style={{ position: 'relative', top: '4px' }} /></IonCardTitle>
                     <IonCardSubtitle>{ place.subtitle }</IonCardSubtitle>
                   </IonCardHeader>
                 </IonCard>
