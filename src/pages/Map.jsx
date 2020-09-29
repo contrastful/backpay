@@ -117,7 +117,8 @@ const Map = () => {
         onDidDismiss={() => setLoading(false)}
         message={'Načítavam...'}
       />
-        <IonHeader class="header">
+
+      <IonHeader class="header">
           <IonToolbar class="toolbar" color="primary">
             <IonTitle size="large" class="title">
               Podniky okolo
@@ -182,12 +183,18 @@ const Map = () => {
                   </IonCardHeader>
                 </IonCard>
 
-                <PlaceModal place={place} isOpen={placeDetailOpen && placeDetailOpen.id === place.id} />
+                {/* {
+                  placeDetailOpen && placeDetailOpen.id === place.id ?
+                  <PlaceModal place={place} isOpen={placeDetailOpen && placeDetailOpen.id === place.id} />
+                  : null
+                } */}
               </div>
             ) : null
           }
         </div>
       </IonContent>
+
+      <PlaceModal place={placeDetailOpen} isOpen={placeDetailOpen ? true : false} onDismiss={() => setPlaceDetailOpen(null) } />
     </IonPage>
   );
 };
