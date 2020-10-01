@@ -47,11 +47,17 @@ const Map = () => {
         setLoading(false);
 
         setBottomCardsActive(true);
+
+        setTimeout(() => {
+          mapRef.current.panTo({ lat: position.coords.latitude, lng: position.coords.longitude });
+        }, 100);
       }).catch(e => {
+        console.log(e);
         alert(JSON.stringify(e));
         setLoading(false);
       });
     } catch (e) {
+      console.log(e);
       alert(JSON.stringify(e));
       setLoading(false);
     }
@@ -146,7 +152,7 @@ const Map = () => {
             <GoogleMapReact
               options={{ zoomControl: false, fullscreenControl: false, styles: MapStyles, minZoom: !activePlace ? 11 : 14 }}
               bootstrapURLKeys={{ key: 'AIzaSyAVp64uakSkfvtzl28aqjPALKk_r3W9iR0' }}
-              defaultCenter={position}
+              defaultCenter={{ lat: 48.1496395, lng: 17.1172203 }}
               defaultZoom={14}
               yesIWantToUseGoogleMapApiInternals
               onGoogleApiLoaded={({ map, maps }) => mapRef.current = map }
