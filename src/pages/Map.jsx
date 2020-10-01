@@ -33,7 +33,9 @@ const Map = () => {
     setLoading(true);
 
     try {
+      console.log('getting position');
       Geolocation.getCurrentPosition().then(async position => {
+        console.log(position);
         setPosition({ lat: position.coords.latitude, lng: position.coords.longitude });
 
         let categoriesRes = await Axios.get(`${ constants.API_BASE }/categories`);

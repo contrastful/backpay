@@ -58,7 +58,7 @@ const App: React.FC = () => (
     
     <IonReactRouter>
       <IonRouterOutlet>
-        <Route path="/map" component={Map} exact={true} />
+        <Route path="/" component={Map} exact={true} />
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
