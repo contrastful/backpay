@@ -19,6 +19,7 @@ export default (props) => {
     const [isLoading, setIsLoading] = useState();
     const [place, setPlace] = useState();
     const [activeSegment, setActiveSegment] = useState();
+    const [coverImage, setCoverImage] = useState();
 
     const fetchData = async() => {
         setPlace(null);
@@ -28,6 +29,14 @@ export default (props) => {
 
         let placeDetailRes = await Axios.get(`${ constants.API_BASE }/place_detail/${ placePreview.id }`);
         setPlace(placeDetailRes.data.place);
+        
+        let coverImageBase64 = await Axios
+            .get(placeDetailRes.data.place.coverImage, { responseType: 'arraybuffer' })
+            .then(response => Buffer.from(response.data, 'binary').toString('base64'));
+
+        setCoverImage(coverImageBase64);
+
+        console.log(coverImageBase64);
         
         setIsLoading(false);
     }
@@ -59,7 +68,7 @@ export default (props) => {
             {
                 place ?
                     <IonContent fullscreen className="placeModal">
-                        <div className="header" style={{ backgroundImage: `url(${ place.coverImage })`, backgroundSize: 'cover' }}>
+                        <div className="header" style={{ backgroundImage: `url(data:image/jpg;base64,${ coverImage })`, backgroundSize: 'cover' }}>
                             <div className="overlay"></div>
 
                             <h1>{ place.title }</h1>
@@ -102,7 +111,7 @@ export default (props) => {
                                         <IonLabel>Prečo { place.title }?</IonLabel>
                                     </IonSegmentButton>
                                     <IonSegmentButton value="gallery">
-                                        <IonLabel>Fotky</IonLabel>
+                                        <IonLabel>Galéria</IonLabel>
                                     </IonSegmentButton>
                                 </IonSegment>
                             </div>

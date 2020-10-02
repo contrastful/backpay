@@ -33,32 +33,37 @@ const Map = () => {
     setLoading(true);
 
     try {
-      console.log('getting position');
-      Geolocation.getCurrentPosition().then(async position => {
-        console.log(position);
-        setPosition({ lat: position.coords.latitude, lng: position.coords.longitude });
+      let categoriesRes = await Axios.get(`${ constants.API_BASE }/categories`);
+      setCategories(categoriesRes.data.categories);
 
-        let categoriesRes = await Axios.get(`${ constants.API_BASE }/categories`);
-        setCategories(categoriesRes.data.categories);
+      let placesRes = await Axios.get(`${ constants.API_BASE }/places`);
+      setPlaces(placesRes.data.places);
 
-        let placesRes = await Axios.get(`${ constants.API_BASE }/places`);
-        setPlaces(placesRes.data.places);
-
-        setLoading(false);
-
+      // setTimeout(async () => {
         setBottomCardsActive(true);
-
-        setTimeout(() => {
-          mapRef.current.panTo({ lat: position.coords.latitude, lng: position.coords.longitude });
-        }, 100);
-      }).catch(e => {
-        console.log(e);
-        alert(JSON.stringify(e));
         setLoading(false);
-      });
+  
+        console.log(placesRes.data.places);
+  
+        setPosition({ lat: placesRes.data.places[0].latitude, lng: placesRes.data.places[0].longitude });
+  
+        if (false) {
+          Geolocation.getCurrentPosition().then(async position => {
+            setPosition({ lat: position.coords.latitude, lng: position.coords.longitude });
+  
+            setLoading(false);
+  
+            setTimeout(() => {
+              mapRef.current.panTo({ lat: position.coords.latitude, lng: position.coords.longitude });
+            }, 100);
+          }).catch(e => {
+            console.log(e);
+            setLoading(false);
+          });
+        }
+      // }, 500);
     } catch (e) {
       console.log(e);
-      alert(JSON.stringify(e));
       setLoading(false);
     }
   }
