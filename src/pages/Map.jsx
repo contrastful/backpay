@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { createGesture, IonAvatar, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonChip, IonCol, IonContent, IonFab, IonFabButton, IonGrid, IonHeader, IonIcon, IonLabel, IonLoading, IonPage, IonProgressBar, IonRow, IonTitle, IonToolbar } from '@ionic/react';
+import { createGesture, IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonChip, IonCol, IonContent, IonFab, IonFabButton, IonGrid, IonHeader, IonIcon, IonLabel, IonLoading, IonPage, IonProgressBar, IonRow, IonTitle, IonToolbar } from '@ionic/react';
 import { Geolocation } from '@ionic-native/geolocation';
 import './Map.scss';
-import { cafe, shirt, fastFood, checkmark, add } from 'ionicons/icons';
+import { cafe, shirt, fastFood, checkmark, add, colorWandOutline } from 'ionicons/icons';
 import GoogleMapReact from 'google-map-react';
 import MapMarker from '../components/MapMarker';
 
 import MapStyles from '../theme/MapStyle.json';
 import PlaceModal from '../components/PlaceModal';
+import TutorialModal from '../components/TutorialModal';
 import Axios from 'axios';
 import constants from '../constants';
 
@@ -24,6 +25,7 @@ const Map = () => {
   const [activePlace, setActivePlace] = useState();
   const [currentZoom, setCurrentZoom] = useState();
   const [placeDetailOpen, setPlaceDetailOpen] = useState();
+  const [showingTutorial, setShowingTutorial] = useState();
 
   const bottomPlacesRef = useRef();
 
@@ -31,6 +33,8 @@ const Map = () => {
     setCurrentZoom(14);
 
     setLoading(true);
+
+    setShowingTutorial(true);
 
     try {
       let categoriesRes = await Axios.get(`${ constants.API_BASE }/categories`);
@@ -132,24 +136,30 @@ const Map = () => {
       />
 
       <IonHeader class="header">
-          <IonToolbar class="toolbar" color="primary">
-            <IonTitle size="large" class="title">
-              Podniky okolo
-            </IonTitle>
+        <IonToolbar class="toolbar" color="primary">
+          <IonTitle size="large" class="title">
+            Podniky okolo
+          </IonTitle>
 
-            <div className="scroller">
-              {
-                categories ? categories.map(category => 
-                  <IonChip key={category.id} color="primary" outline={activeCategory !== category.id} onClick={() => switchCategory(category)}>
-                    <IonIcon icon={usedIcons[category.icon]} color="primary" />
-                    <IonLabel>{category.title}</IonLabel>
-                    { activeCategory === category.id ? <IonIcon icon={checkmark} /> : null }
-                  </IonChip>
-                ) : <IonProgressBar type="indeterminate" />
-              }
-            </div>
-          </IonToolbar>
-        </IonHeader>
+          <IonButtons slot="end">
+            <IonButton color="light" onClick={() => setShowingTutorial(true) }>
+              <IonIcon slot="icon-only" icon={colorWandOutline} />
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+
+        <div className="scroller">
+          {
+            categories ? categories.map(category => 
+              <IonChip key={category.id} color="primary" outline={activeCategory !== category.id} onClick={() => switchCategory(category)}>
+                <IonIcon icon={usedIcons[category.icon]} color="primary" />
+                <IonLabel>{category.title}</IonLabel>
+                { activeCategory === category.id ? <IonIcon icon={checkmark} /> : null }
+              </IonChip>
+            ) : <IonProgressBar type="indeterminate" />
+          }
+        </div>
+      </IonHeader>
 
       <IonContent fullscreen class="content" scrollY={false}>
         <div className="mapSection">
@@ -208,6 +218,8 @@ const Map = () => {
       </IonContent>
 
       <PlaceModal place={placeDetailOpen} isOpen={placeDetailOpen ? true : false} onDismiss={() => setPlaceDetailOpen(null) } />
+
+      <TutorialModal isOpen={ showingTutorial } onDismiss={ () => setShowingTutorial(false) } />
     </IonPage>
   );
 };

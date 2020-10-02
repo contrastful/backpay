@@ -15,7 +15,7 @@
     margin-left: -5px;
     margin-right: -5px;
     margin-bottom: -3px;
-    margin-top: 1.5rem;
+    // margin-top: 1.5rem;
     background: white;
     display: block;
     overflow-x: scroll;
@@ -61,7 +61,13 @@
         box-shadow: none;
         border-radius: 13px;
         min-width: 130px;
+        cursor: pointer;
         // background: rgb(44, 205, 92);
+        transition: all .3s;
+
+        &:hover:not(.ion-color-primary) {
+            background: darken(white, 10);
+        }
         
         &.ion-color-primary {
             color: white;

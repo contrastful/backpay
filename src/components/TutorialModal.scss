@@ -1,0 +1,40 @@
+.tutorial {
+    background: linear-gradient(135deg, rgba(45,211,111,1) 0%, rgba(40,186,98,1) 100%);
+    height: 100%;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 2.5rem;
+
+    .slide {
+        flex-direction: column;
+        max-width: 100%;
+    }
+
+    .icon-large {
+        transform: scale(1.3);
+        margin-bottom: 1rem;
+    }
+
+    h1, h2 {
+        margin-bottom: .5rem;
+        font-weight: 700;
+    }
+
+    .swipe {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        p {
+            font-size: 1.1em;
+            // font-weight: 700;
+            margin-right: .5rem;
+        }
+
+        .icon-medium {
+            transform: scale(1.2);
+        }
+    }
+}

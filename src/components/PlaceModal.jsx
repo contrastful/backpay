@@ -35,8 +35,6 @@ export default (props) => {
             .then(response => Buffer.from(response.data, 'binary').toString('base64'));
 
         setCoverImage(coverImageBase64);
-
-        console.log(coverImageBase64);
         
         setIsLoading(false);
     }
