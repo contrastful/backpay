@@ -2,9 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createGesture, IonActionSheet, IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonChip, IonCol, IonContent, IonFab, IonFabButton, IonGrid, IonHeader, IonIcon, IonLabel, IonLoading, IonPage, IonProgressBar, IonRow, IonTitle, IonToolbar } from '@ionic/react';
 import { Geolocation } from '@ionic-native/geolocation';
 import './Map.scss';
-import { cafe, shirt, fastFood, checkmark, add, colorWandOutline, locationOutline, locationSharp, helpOutline } from 'ionicons/icons';
+import { checkmark, add, colorWandOutline, locationOutline, locationSharp, helpOutline } from 'ionicons/icons';
 import GoogleMapReact from 'google-map-react';
 import MapMarker from '../components/MapMarker';
+import usedIcons from '../usedIcons';
 
 import MapStyles from '../theme/MapStyle.json';
 import PlaceModal from '../components/PlaceModal';
@@ -12,61 +13,50 @@ import TutorialModal from '../components/TutorialModal';
 import Axios from 'axios';
 import constants from '../constants';
 
-const usedIcons = {cafe, shirt, fastFood};
-
 const Map = () => {
   const mapRef = useRef();
   const [loading, setLoading] = useState();
-  const [position, setPosition] = useState();
   const [bottomCardsActive, setBottomCardsActive] = useState();
   const [categories, setCategories] = useState();
   const [places, setPlaces] = useState();
   const [activeCategory, setActiveCategory] = useState();
   const [activePlace, setActivePlace] = useState();
-  const [currentZoom, setCurrentZoom] = useState();
   const [placeDetailOpen, setPlaceDetailOpen] = useState();
   const [showingTutorial, setShowingTutorial] = useState();
   const [showingAreaActionSheet, setShowingAreaActionSheet] = useState();
+  const [areas, setAreas] = useState();
+  const [activeArea, setActiveArea] = useState();
+  const [minZoomLevel, setMinZoomLevel] = useState();
 
   const bottomPlacesRef = useRef();
 
   const fetchData = async () => {
-    setCurrentZoom(14);
-
     setLoading(true);
 
     // setShowingTutorial(true);
 
     try {
-      let categoriesRes = await Axios.get(`${ constants.API_BASE }/categories`);
+      let categoriesRes = await Axios.get(`${ constants.API_BASE }/categories_and_areas`);
       setCategories(categoriesRes.data.categories);
+      setAreas(categoriesRes.data.areas);
+      setActiveArea(categoriesRes.data.areas[0]);
 
-      let placesRes = await Axios.get(`${ constants.API_BASE }/places`);
-      setPlaces(placesRes.data.places);
+      loadArea(categoriesRes.data.areas[0]);
 
-      // setTimeout(async () => {
-        setBottomCardsActive(true);
-        setLoading(false);
-  
-        console.log(placesRes.data.places);
-  
-        setPosition({ lat: placesRes.data.places[0].latitude, lng: placesRes.data.places[0].longitude });
-  
-        if (false) {
-          Geolocation.getCurrentPosition().then(async position => {
-            setPosition({ lat: position.coords.latitude, lng: position.coords.longitude });
-  
-            setLoading(false);
-  
-            setTimeout(() => {
-              mapRef.current.panTo({ lat: position.coords.latitude, lng: position.coords.longitude });
-            }, 100);
-          }).catch(e => {
-            console.log(e);
-            setLoading(false);
-          });
-        }
-      // }, 500);
+      // if (false) {
+      //   Geolocation.getCurrentPosition().then(async position => {
+      //     setPosition({ lat: position.coords.latitude, lng: position.coords.longitude });
+
+      //     setLoading(false);
+
+      //     setTimeout(() => {
+      //       mapRef.current.panTo({ lat: position.coords.latitude, lng: position.coords.longitude });
+      //     }, 100);
+      //   }).catch(e => {
+      //     console.log(e);
+      //     setLoading(false);
+      //   });
+      // }
     } catch (e) {
       console.log(e);
       setLoading(false);
@@ -93,6 +83,28 @@ const Map = () => {
     gesture.enable(true);
   }, []);
 
+  const loadArea = async (area) => {
+    setBottomCardsActive(false);
+    setLoading(true);
+
+    let placesRes = await Axios.get(`${ constants.API_BASE }/places?areaSlug=${ area.slug }`);
+    setPlaces(placesRes.data.places);
+
+    setActiveArea(area);
+    setBottomCardsActive(true);
+    setLoading(false);
+
+    try {
+      setMinZoomLevel(area.minZoomLevel);
+      mapRef.current.panTo({ lat: area.latitude, lng: area.longitude });
+      mapRef.current.setZoom(area.defaultZoomLevel);
+      console.log('zoom: ' + area.defaultZoomLevel);
+      console.log('min: ' + area.minZoomLevel);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   const switchCategory = (category) => {
     if (category.id === activeCategory) {
       setActiveCategory(null);
@@ -100,7 +112,6 @@ const Map = () => {
       setActiveCategory(category.id);
       setBottomCardsActive(true);
       setActivePlace(null);
-      setCurrentZoom(14);
       mapRef.current.setZoom(14);
     }
   }
@@ -108,13 +119,10 @@ const Map = () => {
   const switchPlace = (place, dontUnmark = false) => {
     if (!dontUnmark && (activePlace && activePlace.id === place.id)) {
       setActivePlace(null);
-      setCurrentZoom(14);
       mapRef.current.setZoom(14);
     } else {
       setBottomCardsActive(true);
       setActivePlace(place);
-      setCurrentZoom(17);
-      setPosition({ lat: place.latitude, lng: place.longitude });
       mapRef.current.panTo({ lat: place.latitude, lng: place.longitude });
       mapRef.current.setZoom(17);
 
@@ -145,7 +153,7 @@ const Map = () => {
 
           <IonButtons slot="end">
             <IonButton color="light" onClick={() => setShowingAreaActionSheet(true) }>
-              <span style={{ marginRight: '.5rem' }}>Bratislava</span> <IonIcon icon={locationOutline} />
+              <span style={{ marginRight: '.5rem' }}>{ activeArea ? activeArea.name : null }</span> <IonIcon icon={locationOutline} />
             </IonButton>
             <IonButton color="light" size="small" onClick={() => setShowingTutorial(true) }>
               <IonIcon slot="icon-only" icon={helpOutline} />
@@ -168,9 +176,9 @@ const Map = () => {
 
       <IonContent fullscreen class="content" scrollY={false}>
         <div className="mapSection">
-          { position ? 
+          {/* { position ?  */}
             <GoogleMapReact
-              options={{ zoomControl: false, fullscreenControl: false, styles: MapStyles, minZoom: !activePlace ? 11 : 14 }}
+              options={{ zoomControl: false, fullscreenControl: false, styles: MapStyles, minZoom: minZoomLevel ? minZoomLevel : 10 }}
               bootstrapURLKeys={{ key: 'AIzaSyAVp64uakSkfvtzl28aqjPALKk_r3W9iR0' }}
               defaultCenter={{ lat: 48.1496395, lng: 17.1172203 }}
               defaultZoom={14}
@@ -188,10 +196,10 @@ const Map = () => {
                     onClick={() => switchPlace(place, true)}
                     onShowDetailClick={() => setPlaceDetailOpen(place)}
                   />
-                ) : null
+                ) : []
               }
             </GoogleMapReact>
-          : null }
+          {/* : null } */}
         </div>
 
         <IonFab vertical="top" horizontal="end" slot="fixed">
@@ -206,7 +214,7 @@ const Map = () => {
               <div key={place.id} className="cardContainer" id={`place_bottom_${place.id}`}>
                 <IonCard className="card" key={place.id} color={placeIsActive(place) ? 'primary' : 'light'} onClick={() => switchPlace(place) }>
                   <IonCardHeader>
-                    <IonCardTitle>{ place.title } <IonIcon icon={cafe} color={placeIsActive(place) ? 'light' : 'primary'} size="medium" style={{ position: 'relative', top: '4px' }} /></IonCardTitle>
+                    <IonCardTitle>{ place.title } <IonIcon icon={usedIcons[place.icon]} color={placeIsActive(place) ? 'light' : 'primary'} size="medium" style={{ position: 'relative', top: '4px' }} /></IonCardTitle>
                     <IonCardSubtitle>{ place.subtitle }</IonCardSubtitle>
                   </IonCardHeader>
                 </IonCard>
@@ -230,25 +238,17 @@ const Map = () => {
         isOpen={showingAreaActionSheet}
         onDidDismiss={() => setShowingAreaActionSheet(false)}
         header='Vyber si oblasť'
-        buttons={[{
-          text: 'Bratislava',
-          cssClass: 'activeArea',
-          // icon: checkmark,
-          handler: () => {
-            console.log('Delete clicked');
-          }
-        },{
-          text: 'Liptov',
-          handler: () => {
-            console.log('Delete clicked');
-          }
-        },{
-          text: 'Košice',
-          handler: () => {
-            console.log('Delete clicked');
-          }
-        },
-      ]}
+        buttons={
+          [...(areas ? areas.map(area => {
+            return {
+              text: area.name,
+              cssClass: (activeArea && activeArea.id === area.id) ? 'activeArea' : '',
+              handler: () => {
+                loadArea(area)
+              }
+            }
+          }) : []), { text: 'Ďalšie miesta čoskoro!', cssClass: 'disabledArea' }]
+        }
       >
       </IonActionSheet>
     </IonPage>

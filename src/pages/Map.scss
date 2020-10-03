@@ -100,3 +100,9 @@
     background: linear-gradient(135deg, rgba(45,211,111,1) 0%, rgba(40,186,98,1) 100%) !important;
     color: white !important;
 }
+
+.disabledArea {
+    opacity: 0.7;
+    background: white !important;
+    cursor: default;
+}

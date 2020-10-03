@@ -1,10 +1,8 @@
 import { IonButton, IonCard, IonCardHeader, IonCardTitle, IonIcon, IonLabel } from '@ionic/react';
 import React, { useEffect, useRef, useState } from 'react';
-import { cafe, shirt, fastFood } from 'ionicons/icons';
+import usedIcons from '../usedIcons';
 
 import './MapMarker.scss';
-
-const usedIcons = {cafe, shirt, fastFood};
 
 export default (props) => {
     const place = props.place;

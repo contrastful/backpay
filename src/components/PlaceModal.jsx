@@ -1,12 +1,12 @@
 import { IonBackButton, IonButton, IonButtons, IonCard, IonCardHeader, IonCardTitle, IonChip, IonContent, IonHeader, IonIcon, IonLabel, IonLoading, IonModal, IonSegment, IonSegmentButton, IonSlide, IonSlides, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useEffect, useRef, useState } from 'react';
-import { cafe, shirt, fastFood, arrowBack, logoInstagram, logoFacebook, logoGoogle, heart } from 'ionicons/icons';
+import { arrowBack, logoInstagram, logoFacebook, logoGoogle, heart } from 'ionicons/icons';
 
 import './PlaceModal.scss';
 import Axios from 'axios';
 import constants from '../constants';
 
-const usedIcons = {cafe, shirt, fastFood, heart};
+import usedIcons from '../usedIcons';
 
 const slideOpts = {
     initialSlide: 1,
@@ -23,19 +23,22 @@ export default (props) => {
 
     const fetchData = async() => {
         setPlace(null);
+        setCoverImage(null);
         setActiveSegment('about');
 
         setIsLoading(true);
 
         let placeDetailRes = await Axios.get(`${ constants.API_BASE }/place_detail/${ placePreview.id }`);
-        setPlace(placeDetailRes.data.place);
-        
-        let coverImageBase64 = await Axios
-            .get(placeDetailRes.data.place.coverImage, { responseType: 'arraybuffer' })
-            .then(response => Buffer.from(response.data, 'binary').toString('base64'));
 
-        setCoverImage(coverImageBase64);
+        if (placeDetailRes.data.place.coverImage) {
+            let coverImageBase64 = await Axios
+                .get(placeDetailRes.data.place.coverImage, { responseType: 'arraybuffer' })
+                .then(response => Buffer.from(response.data, 'binary').toString('base64'));
+
+            setCoverImage(coverImageBase64);
+        }
         
+        setPlace(placeDetailRes.data.place);
         setIsLoading(false);
     }
 
@@ -66,7 +69,7 @@ export default (props) => {
             {
                 place ?
                     <IonContent fullscreen className="placeModal">
-                        <div className="header" style={{ backgroundImage: `url(data:image/jpg;base64,${ coverImage })`, backgroundSize: 'cover' }}>
+                        <div className="header" style={{ background: 'rgba(45,211,111,1)', backgroundImage: coverImage ? `url(data:image/jpg;base64,${ coverImage })` : null, backgroundSize: 'cover' }}>
                             <div className="overlay"></div>
 
                             <h1>{ place.title }</h1>
@@ -103,16 +106,18 @@ export default (props) => {
                         </div>
 
                         <div className="content">
-                            <div className="container">
-                                <IonSegment onIonChange={e => setActiveSegment(e.detail.value)} value={ activeSegment }>
-                                    <IonSegmentButton value="about" defaultChecked>
-                                        <IonLabel>Prečo { place.title }?</IonLabel>
-                                    </IonSegmentButton>
-                                    <IonSegmentButton value="gallery">
-                                        <IonLabel>Galéria</IonLabel>
-                                    </IonSegmentButton>
-                                </IonSegment>
-                            </div>
+                            { place.images.length > 0 ?
+                                <div className="container">
+                                    <IonSegment onIonChange={e => setActiveSegment(e.detail.value)} value={ activeSegment }>
+                                        <IonSegmentButton value="about" defaultChecked>
+                                            <IonLabel>Prečo { place.title }?</IonLabel>
+                                        </IonSegmentButton>
+                                        <IonSegmentButton value="gallery">
+                                            <IonLabel>Galéria</IonLabel>
+                                        </IonSegmentButton>
+                                    </IonSegment>
+                                </div>
+                            : null }
 
                             {
                                 activeSegment === 'about' ? 
