@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { createGesture, IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonChip, IonCol, IonContent, IonFab, IonFabButton, IonGrid, IonHeader, IonIcon, IonLabel, IonLoading, IonPage, IonProgressBar, IonRow, IonTitle, IonToolbar } from '@ionic/react';
+import { createGesture, IonActionSheet, IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonChip, IonCol, IonContent, IonFab, IonFabButton, IonGrid, IonHeader, IonIcon, IonLabel, IonLoading, IonPage, IonProgressBar, IonRow, IonTitle, IonToolbar } from '@ionic/react';
 import { Geolocation } from '@ionic-native/geolocation';
 import './Map.scss';
-import { cafe, shirt, fastFood, checkmark, add, colorWandOutline } from 'ionicons/icons';
+import { cafe, shirt, fastFood, checkmark, add, colorWandOutline, locationOutline, locationSharp, helpOutline } from 'ionicons/icons';
 import GoogleMapReact from 'google-map-react';
 import MapMarker from '../components/MapMarker';
 
@@ -26,6 +26,7 @@ const Map = () => {
   const [currentZoom, setCurrentZoom] = useState();
   const [placeDetailOpen, setPlaceDetailOpen] = useState();
   const [showingTutorial, setShowingTutorial] = useState();
+  const [showingAreaActionSheet, setShowingAreaActionSheet] = useState();
 
   const bottomPlacesRef = useRef();
 
@@ -34,7 +35,7 @@ const Map = () => {
 
     setLoading(true);
 
-    setShowingTutorial(true);
+    // setShowingTutorial(true);
 
     try {
       let categoriesRes = await Axios.get(`${ constants.API_BASE }/categories`);
@@ -138,12 +139,16 @@ const Map = () => {
       <IonHeader class="header">
         <IonToolbar class="toolbar" color="primary">
           <IonTitle size="large" class="title">
-            Podniky okolo
+            Backpay
+            {/* <div className="locationTitle">Bratislava</div> */}
           </IonTitle>
 
           <IonButtons slot="end">
-            <IonButton color="light" onClick={() => setShowingTutorial(true) }>
-              <IonIcon slot="icon-only" icon={colorWandOutline} />
+            <IonButton color="light" onClick={() => setShowingAreaActionSheet(true) }>
+              <span style={{ marginRight: '.5rem' }}>Bratislava</span> <IonIcon icon={locationOutline} />
+            </IonButton>
+            <IonButton color="light" size="small" onClick={() => setShowingTutorial(true) }>
+              <IonIcon slot="icon-only" icon={helpOutline} />
             </IonButton>
           </IonButtons>
         </IonToolbar>
@@ -220,6 +225,32 @@ const Map = () => {
       <PlaceModal place={placeDetailOpen} isOpen={placeDetailOpen ? true : false} onDismiss={() => setPlaceDetailOpen(null) } />
 
       <TutorialModal isOpen={ showingTutorial } onDismiss={ () => setShowingTutorial(false) } />
+
+      <IonActionSheet
+        isOpen={showingAreaActionSheet}
+        onDidDismiss={() => setShowingAreaActionSheet(false)}
+        header='Vyber si oblasť'
+        buttons={[{
+          text: 'Bratislava',
+          cssClass: 'activeArea',
+          // icon: checkmark,
+          handler: () => {
+            console.log('Delete clicked');
+          }
+        },{
+          text: 'Liptov',
+          handler: () => {
+            console.log('Delete clicked');
+          }
+        },{
+          text: 'Košice',
+          handler: () => {
+            console.log('Delete clicked');
+          }
+        },
+      ]}
+      >
+      </IonActionSheet>
     </IonPage>
   );
 };

@@ -75,7 +75,7 @@ export default (props) => {
                             <div className="social">
                                 {
                                     place.googleMaps ?
-                                        <IonChip outline className="socialMediaChip">
+                                        <IonChip outline className="socialMediaChip" onClick={ () => window.open(place.googleMaps, '_blank') }>
                                             <IonIcon color="light" icon={ logoGoogle } />
                                             <IonLabel color="light">Google Maps</IonLabel>
                                         </IonChip>
@@ -84,7 +84,7 @@ export default (props) => {
 
                                 {
                                     place.instagram ?
-                                        <IonChip outline className="socialMediaChip">
+                                        <IonChip outline className="socialMediaChip" onClick={ () => window.open(place.instagram, '_blank') }>
                                             <IonIcon color="light" icon={ logoInstagram } />
                                             <IonLabel color="light">Instagram</IonLabel>
                                         </IonChip>
@@ -93,7 +93,7 @@ export default (props) => {
 
                                 {
                                     place.facebook ?
-                                        <IonChip outline className="socialMediaChip">
+                                        <IonChip outline className="socialMediaChip" onClick={ () => window.open(place.facebook, '_blank') }>
                                             <IonIcon color="light" icon={ logoFacebook } />
                                             <IonLabel color="light">Facebook</IonLabel>
                                         </IonChip>
