@@ -2,17 +2,10 @@ import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import {
   IonApp,
-  IonIcon,
-  IonLabel,
   IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonTabs
 } from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
-import { heartCircleOutline, map, mapOutline, peopleCircleOutline, personCircle } from 'ionicons/icons';
+import { IonReactHashRouter as IonReactRouter } from '@ionic/react-router';
 import Map from './pages/Map.jsx';
-import Tab2 from './pages/Tab2';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';

@@ -33,8 +33,6 @@ const Map = () => {
   const fetchData = async () => {
     setLoading(true);
 
-    // setShowingTutorial(true);
-
     try {
       let categoriesRes = await Axios.get(`${ constants.API_BASE }/categories_and_areas`);
       setCategories(categoriesRes.data.categories);
@@ -64,6 +62,11 @@ const Map = () => {
   }
 
   useEffect(() => {
+    if (!localStorage.getItem('shownOnboarding')) {
+      setShowingTutorial(true);
+      localStorage.setItem('shownOnboarding', true);
+    }
+
     fetchData();
 
     let c = bottomPlacesRef.current;
@@ -147,7 +150,7 @@ const Map = () => {
       <IonHeader class="header">
         <IonToolbar class="toolbar" color="primary">
           <IonTitle size="large" class="title">
-            Backpay
+            Okolo
             {/* <div className="locationTitle">Bratislava</div> */}
           </IonTitle>
 
