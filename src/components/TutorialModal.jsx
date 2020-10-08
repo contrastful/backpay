@@ -28,7 +28,7 @@ export default (props) => {
                                     <p>Slovensko je plné <b>kvalitných a ekologických</b> obchodov a podnikov, ktoré konkurujú globálnym značkám. Chceme preto vyrobiť appku, ktorá ti pomôže objaviť ich.</p>
 
                                     <div className="swipe">
-                                        <p>1 / 3</p>
+                                        <p>Potiahni</p>
                                         <IonIcon icon={ arrowForwardSharp } color="light" size="medium" />
                                     </div>
                                 </IonSlide>
@@ -37,10 +37,10 @@ export default (props) => {
                                     <IonIcon icon={ mapOutline } color="light" size="large" />
 
                                     <h2>Pridaj miesto</h2>
-                                    <p>Backpay je <b>komunitná mapa</b>, kde zbierame super podniky z celého Slovenska. Ak poznáš miesto, ktoré by si chcel pridať, klikni na <IonIcon style={{ position: 'relative', top: '3px' }} icon={ addCircleOutline } color="light" size="small" /> ikonu vpravo hore mapy a čo najskôr ho pridáme.</p>
+                                    <p>Zdola je <b>komunitná mapa</b>, kde zbierame super podniky z celého Slovenska. Ak poznáš miesto – obchod, kaviareň, reštauráciu – ktoré by si tu rád videl, klikni na <IonIcon style={{ position: 'relative', top: '3px' }} icon={ addCircleOutline } color="light" size="small" /> ikonu vpravo hore mapy a čo najskôr ho pridáme.</p>
 
                                     <div className="swipe">
-                                        <p>2 / 3</p>
+                                        <p>Potiahni</p>
                                         <IonIcon icon={ arrowForwardSharp } color="light" size="medium" />
                                     </div>
                                 </IonSlide>
@@ -49,7 +49,7 @@ export default (props) => {
                                     <IonIcon icon={ heartOutline } color="light" size="large" />
 
                                     <h2>To je vlastne všetko.</h2>
-                                    <p>Ak chceš sledovať novinky o udržateľnosti na Slovensku, môžeš nás sledovať na Instagrame. </p>
+                                    <p>Ak chceš sledovať novinky o udržateľnosti na Slovensku, môžeš nás sledovať na Instagrame <a href="https://instagram.com/zdola.sk" style={{ color: 'white' }}>@zdola.sk</a>.</p>
 
                                     <div className="swipe" style={{ marginTop: '1.3rem '}}>
                                         <IonButton fill="outline" color="light" onClick={ props.onDismiss }>Prejdi na mapu</IonButton>

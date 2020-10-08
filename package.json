@@ -55,5 +55,5 @@
     "@capacitor/cli": "2.4.1"
   },
   "description": "An Ionic project",
-  "homepage": "/podniky"
+  "homepage": "/"
 }

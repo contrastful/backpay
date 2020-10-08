@@ -46,6 +46,20 @@
             background: green;
         }
     }
+
+    @media screen and (min-width: 768px) {
+        .scrollIndicator {
+            display: none;
+        }
+    }
+    
+    .scrollIndicator {
+        top: 4px;
+        position: relative;
+        opacity: 0.6;
+        margin-right: 6px;
+        // color: rgba(45,211,111,1);
+    }
 }
 
 .mapSection {

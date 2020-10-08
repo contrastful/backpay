@@ -30,13 +30,15 @@ export default (props) => {
 
         let placeDetailRes = await Axios.get(`${ constants.API_BASE }/place_detail/${ placePreview.id }`);
 
-        if (placeDetailRes.data.place.coverImage) {
-            let coverImageBase64 = await Axios
-                .get(placeDetailRes.data.place.coverImage, { responseType: 'arraybuffer' })
-                .then(response => Buffer.from(response.data, 'binary').toString('base64'));
+        try {
+            if (placeDetailRes.data.place.coverImage) {
+                let coverImageBase64 = await Axios
+                    .get(placeDetailRes.data.place.coverImage, { responseType: 'arraybuffer' })
+                    .then(response => Buffer.from(response.data, 'binary').toString('base64'));
 
-            setCoverImage(coverImageBase64);
-        }
+                setCoverImage(coverImageBase64);
+            }
+        } catch(e) {}
         
         setPlace(placeDetailRes.data.place);
         setIsLoading(false);
@@ -123,6 +125,12 @@ export default (props) => {
                                 activeSegment === 'about' ? 
                                     <div className="container about">
                                         <p>{ place.about }</p>
+
+                                        <div className="recommendedBy">
+                                            {
+                                                place.recommendedBy ? `pridal/a ${place.recommendedBy}` : `– pridal anonym`
+                                            }
+                                        </div>
 
                                         {
                                             place.perks ?

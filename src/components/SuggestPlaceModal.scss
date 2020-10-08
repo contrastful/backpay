@@ -1,0 +1,33 @@
+.suggestPlaceModal {
+    .content {
+        background: linear-gradient(135deg, rgba(45,211,111,1) 0%, rgba(40,186,98,1) 100%);
+        color: white;
+        text-align: center;
+
+        .container {
+            padding: 1.5rem;
+        }
+
+        .item {
+            margin-bottom: 1rem;
+        }
+
+        .label-floating {
+            color: white !important;
+        }
+
+        .input {
+            color: white;
+            margin-top: 6px;
+
+            &:not(.light) {
+                font-weight: 700;
+            }
+        }
+
+        h4 {
+            margin-top: 2rem;
+            margin-bottom: 1.5rem;
+        }
+    }
+}

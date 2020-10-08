@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createGesture, IonActionSheet, IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonChip, IonCol, IonContent, IonFab, IonFabButton, IonGrid, IonHeader, IonIcon, IonLabel, IonLoading, IonPage, IonProgressBar, IonRow, IonTitle, IonToolbar } from '@ionic/react';
 import { Geolocation } from '@ionic-native/geolocation';
 import './Map.scss';
-import { checkmark, add, colorWandOutline, locationOutline, locationSharp, helpOutline } from 'ionicons/icons';
+import { checkmark, add, colorWandOutline, locationOutline, locationSharp, helpOutline, arrowForwardOutline, returnUpForwardOutline, returnDownForwardOutline } from 'ionicons/icons';
 import GoogleMapReact from 'google-map-react';
 import MapMarker from '../components/MapMarker';
 import usedIcons from '../usedIcons';
@@ -12,6 +12,7 @@ import PlaceModal from '../components/PlaceModal';
 import TutorialModal from '../components/TutorialModal';
 import Axios from 'axios';
 import constants from '../constants';
+import SuggestPlaceModal from '../components/SuggestPlaceModal';
 
 const Map = () => {
   const mapRef = useRef();
@@ -27,6 +28,7 @@ const Map = () => {
   const [areas, setAreas] = useState();
   const [activeArea, setActiveArea] = useState();
   const [minZoomLevel, setMinZoomLevel] = useState();
+  const [suggestingPlace, setIsSuggestingPlace] = useState();
 
   const bottomPlacesRef = useRef();
 
@@ -88,6 +90,7 @@ const Map = () => {
 
   const loadArea = async (area) => {
     setBottomCardsActive(false);
+    setActivePlace(null);
     setLoading(true);
 
     let placesRes = await Axios.get(`${ constants.API_BASE }/places?areaSlug=${ area.slug }`);
@@ -150,7 +153,7 @@ const Map = () => {
       <IonHeader class="header">
         <IonToolbar class="toolbar" color="primary">
           <IonTitle size="large" class="title">
-            Okolo
+            Zdola
             {/* <div className="locationTitle">Bratislava</div> */}
           </IonTitle>
 
@@ -165,6 +168,8 @@ const Map = () => {
         </IonToolbar>
 
         <div className="scroller">
+          <IonIcon icon={returnDownForwardOutline} className="scrollIndicator" />
+
           {
             categories ? categories.map(category => 
               <IonChip key={category.id} color="primary" outline={activeCategory !== category.id} onClick={() => switchCategory(category)}>
@@ -206,7 +211,8 @@ const Map = () => {
         </div>
 
         <IonFab vertical="top" horizontal="end" slot="fixed">
-          <IonFabButton color="light">
+          {/* <IonFabButton color="light" onClick={() => setIsSuggestingPlace(true) }> */}
+          <IonFabButton color="light" onClick={() => window.open('https://forms.gle/3AFoB34FaUJWQP5i9', '_blank') }>
             <IonIcon icon={add} color="primary" />
           </IonFabButton>
         </IonFab>
@@ -236,6 +242,8 @@ const Map = () => {
       <PlaceModal place={placeDetailOpen} isOpen={placeDetailOpen ? true : false} onDismiss={() => setPlaceDetailOpen(null) } />
 
       <TutorialModal isOpen={ showingTutorial } onDismiss={ () => setShowingTutorial(false) } />
+      
+      <SuggestPlaceModal isOpen={ suggestingPlace } onDismiss={ () => setIsSuggestingPlace(false) } />
 
       <IonActionSheet
         isOpen={showingAreaActionSheet}
